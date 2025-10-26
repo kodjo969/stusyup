@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>StudyUp — Plateforme d'étude intelligente</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#071029;
+    --accent-green:#1db954;
+    --muted:#9aa7bf;
+    --card:#071a33;
+    --glass: rgba(255,255,255,0.03);
+    --glass-2: rgba(255,255,255,0.04);
+    --gold: #f5c542;
+    --radius:14px;
+    --soft-shadow: 0 12px 30px rgba(2,8,23,0.6);
+    --glass-border: rgba(255,255,255,0.04);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6f0ff;background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(29,185,84,0.06), transparent 6%),
+    radial-gradient(600px 500px at 90% 80%, rgba(21,80,160,0.08), transparent 10%),
+    linear-gradient(180deg,var(--bg-deep),#041226 120%); -webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none}
+
+  /* HEADER */
+  header.site-header{
+    display:flex;align-items:center;justify-content:space-between;padding:14px 26px;
+    border-bottom:1px solid rgba(255,255,255,0.02);position:sticky;top:0;background:linear-gradient(180deg, rgba(0,0,0,0.1), transparent);
+    z-index:40;
+  }
+  .brand-left{display:flex;align-items:center;gap:12px}
+  .logo-wrap{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#0b3b6f,#00263f);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.6);}
+  .brand-title{font-weight:700;color:#e9f6ff;letter-spacing:0.6px}
+  .brand-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+  /* TOP NAV */
+  nav.topnav{display:flex;gap:12px;align-items:center}
+  nav.topnav .nav-link{color:var(--muted);padding:8px 12px;border-radius:10px;font-weight:600;cursor:pointer;transition:all .25s}
+  nav.topnav .nav-link:hover{background:var(--glass);color:#e8faff;transform:translateY(-2px)}
+  .nav-right{display:flex;gap:12px;align-items:center}
+
+  /* MAIN LAYOUT */
+  .container{max-width:1200px;margin:26px auto;padding:0 20px}
+  .hero{
+    display:grid;grid-template-columns:1fr 460px;gap:22px;align-items:center;margin-bottom:26px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:18px;box-shadow:var(--soft-shadow);
+    border:1px solid var(--glass-border);
+  }
+  .hero-left h1{font-size:28px;margin:4px 0 6px;color:#e8faff}
+  .hero-left p.lead{color:var(--muted);margin:0 0 12px;line-height:1.6}
+  .hero-cta{display:flex;gap:12px}
+  .btn{
+    background:linear-gradient(90deg,var(--accent-green),#13a964);color:#001218;border:none;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(11,60,40,0.18)
+  }
+  .btn.secondary{background:linear-gradient(90deg,#0e3b73,#0058a6);color:#e6f0ff}
+
+  /* 3D Carousel (right) */
+  .carousel-wrap{perspective:1400px;display:flex;align-items:center;justify-content:center;height:280px}
+  .carousel{
+    width:380px;height:230px;position:relative;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.2,.9,.3,1)
+  }
+  .carousel .slide{
+    position:absolute;inset:0;border-radius:12px;overflow:hidden;backface-visibility:hidden;
+    display:flex;align-items:flex-end;justify-content:center;padding:18px;color:white;font-weight:700;
+    box-shadow:0 18px 50px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)
+  }
+  .slide .overlay{background:linear-gradient(180deg,transparent, rgba(0,0,0,0.55));padding:12px;border-radius:10px;width:100%;text-align:left}
+  .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(.95) saturate(1.05)}
+  .carousel .s0{transform: rotateY(0deg) translateZ(420px) translateY(-10px);width:380px;height:230px}
+  .carousel .s1{transform: rotateY(120deg) translateZ(360px) translateY(8px);width:360px;height:210px;opacity:.92}
+  .carousel .s2{transform: rotateY(-120deg) translateZ(360px) translateY(8px);width:360px;height:210px;opacity:.92}
+  .carousel-controls{display:flex;gap:8px;justify-content:center;margin-top:12px}
+  .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);cursor:pointer}
+  .dot.active{background:var(--accent-green);box-shadow:0 6px 18px rgba(27,185,86,0.14)}
+
+  /* SECTIONS: feature tabs + cards */
+  .tabs{display:flex;gap:12px;background:var(--card);padding:12px;border-radius:12px;border:1px solid var(--glass-border);margin-bottom:18px}
+  .tab{padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer;font-weight:700}
+  .tab.active{background:linear-gradient(90deg,#06263f, #0b3d5d);color:#e6f7ff;box-shadow:0 10px 30px rgba(3,18,36,0.6)}
+  .dashboard-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+
+  .card-module{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    padding:18px;border-radius:12px;border:1px solid var(--glass-border);box-shadow:0 12px 30px rgba(0,0,0,0.6)
+  }
+  .module-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .module-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+  .feature-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);cursor:pointer;transition:all .25s}
+  .feature-card:hover{transform:translateY(-8px);box-shadow:0 22px 50px rgba(0,0,0,0.6)}
+  .feature-card h3{margin:6px 0 4px;color:#e9f9f0}
+  .feature-card p{color:var(--muted);font-size:13px}
+
+  /* SECOND DIAPO (HORS-NORME) */
+  .marquee-wrap{margin-top:20px;padding:10px;border-radius:12px;border:1px solid var(--glass-border);background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));overflow:hidden}
+  .marquee{
+    display:flex;gap:18px;align-items:center;will-change:transform;animation:marquee 22s linear infinite;
+  }
+  .marquee-card{min-width:260px;height:140px;border-radius:12px;overflow:hidden;position:relative;box-shadow:0 14px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);background:linear-gradient(135deg,#06263f,#00355a)}
+  .marquee-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.9}
+  .marquee-card .meta{position:absolute;left:12px;bottom:12px;color:white;font-weight:800;text-shadow:0 6px 20px rgba(0,0,0,0.6)}
+
+  @keyframes marquee{
+    0%{transform:translateX(0%)}100%{transform:translateX(-50%)}
+  }
+
+  /* FILE SHARING / CHAT */
+  .share-area{display:flex;gap:12px;flex-direction:column}
+  .file-list{max-height:160px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+  .chat-box{height:220px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+  .chat-input{display:flex;gap:8px;margin-top:8px}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.2);color:var(--muted);font-weight:700}
+
+  /* Modal windows (draggable) */
+  .modal{
+    position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.98);min-width:420px;max-width:92%;
+    background:linear-gradient(180deg,#021428,#03223a);color:#e8f8f0;border-radius:12px;padding:14px;z-index:80;
+    box-shadow:0 40px 90px rgba(0,0,0,0.7);border:1px solid rgba(255,255,255,0.04);display:none
+  }
+  .modal.show{display:block}
+  .modal .m-head{display:flex;justify-content:space-between;align-items:center;cursor:grab;padding:6px 8px}
+  .m-title{font-weight:800}
+  .m-close{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px;cursor:pointer}
+  .modal .m-body{padding:8px 8px 14px;color:var(--muted);font-size:14px}
+  .input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.02);color:#e6f9ef}
+  .small {font-size:13px;color:var(--muted)}
+
+  /* help content */
+  .help-step{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:10px;border-radius:10px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02)}
+  .help-step h4{margin:4px 0;color:#eaf9f0}
+  .help-step ol{color:var(--muted);line-height:1.6;margin:6px 0;padding-left:16px}
+
+  /* responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr}
+    .dashboard-grid{grid-template-columns:1fr}
+    .footer-grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:640px){
+    nav.topnav{display:none}
+    .logo-wrap{width:46px;height:46px}
+    .carousel-wrap{display:none}
+  }
+
+</style>
+</head>
+<body>
+ <header class="site-header">
+  <div class="brand-left">
+    <div class="logo-wrap" title="StudyUp">
+      <!-- logo -->
+<svg viewBox="0 0 100 100" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#0b3b6f"/><stop offset="1" stop-color="#00263f"/>
+          </linearGradient>
+          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#001a2b" flood-opacity="0.6"/>
+          </filter>
+        </defs>
+        <rect x="8" y="8" width="84" height="84" rx="16" fill="url(#g1)" filter="url(#shadow)"/>
+        <path d="M36 34h28v32H36z" fill="#f5c542" transform="translate(0,0)"/>
+        <path d="M42 40h16v4H42z" fill="#08263f" opacity="0.9"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-title">StudyUp</div>
+      <div class="brand-sub">Apprentissage — Organisé — Collaboratif</div>
+    </div>
+  </div>
+
+  <nav class="topnav nav-right" aria-label="Main navigation">
+    <div class="nav-link" data-tab="features">Fonctionnalités</div>
+    <div class="nav-link" data-tab="privacy">Confidentialité</div>
+    <div class="nav-link" data-tab="programs">Programmes</div>
+    <div class="nav-link" data-tab="help">Aide</div>
+  </nav>
+ </header>
+
+ <main class="container">
+  <!-- HERO -->
+  <section class="hero" role="region" aria-label="Hero">
+    <div class="hero-left">
+      <h1>StudyUp — Ton partenaire de réussite</h1>
+      <p class="lead">StudyUp est une application innovante conçue pour accompagner les étudiants dans leur parcours académique. Elle a pour objectif de rendre l’apprentissage plus simple, plus organisé et plus motivant.</p>
+
+      <!-- Long presentation (≈20 lignes) -->
+      <p style="line-height:1.6;color:var(--muted)">
+        StudyUp réunit des outils puissants pensés pour les étudiants : un agenda intelligent capable de découper ton programme en sessions journalières, un mode Focus pour te protéger des distractions, des groupes de travail pour partager des fiches et progresser ensemble, ainsi qu’un système simple de partage de fichiers et de chat pour échanger notes et commentaires. L'interface est conçue pour être rapide, claire et agréable sur ordinateur comme sur mobile.
+      </p>
+      <p style="line-height:1.6;color:var(--muted)">
+        Cette version prototype garde tout localement (sur ton navigateur) : tu peux créer des cours, générer des résumés instantanés, planifier tes révisions en fonction de ton emploi du temps hebdomadaire, et inviter d'autres étudiants à rejoindre tes groupes. Pour chaque fonctionnalité je fournis un mode d’emploi pas à pas (onglet Aide). L'application encourage les bonnes pratiques d'étude : petites sessions régulières, suivi de progression et partage responsable des documents.
+      </p>
+      <p style="line-height:1.6;color:var(--muted)">
+        Exemples d'usage : organiser une semaine d’examens, partager une fiche de synthèse, lancer un Focus de 25 minutes avant un devoir, ou encore créer un groupe pour réviser en équipe. Toutes les actions sont persistées localement et peuvent être exportées (téléchargement) pour sauvegarde.
+      </p>
+
+      <div style="margin-top:12px" class="hero-cta">
+        <button class="btn" id="open-agenda">Ouvrir Agenda</button>
+        <button class="btn secondary" id="open-groups">Trouver un groupe</button>
+      </div>
+    </div>
+
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel">
+        <div class="slide s0" role="img" aria-label="Diapo 1 - Agenda intelligent">
+          <img src="https://tse1.mm.bing.net/th/id/OIP._zEQpzfZrm4hd6myPQOiNAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Etudiant planifiant">
+          <div class="overlay"><div style="font-size:16px">Agenda intelligent</div><div class="small">Planifie les sessions selon ton emploi du temps</div></div>
+        </div>
+        <div class="slide s1" role="img" aria-label="Diapo 2 - Sessions Focus">
+          <img src="https://image.freepik.com/photos-gratuite/groupe-etudiants-heureux-retourner-universite_23-2148586612.jpg" alt="Session focus">
+          <div class="overlay"><div style="font-size:16px">Sessions Focus</div><div class="small">Pomodoro & blocage des distractions</div></div>
+        </div>
+        <div class="slide s2">
+          <img src="https://img.freepik.com/photos-gratuite/etudiants-travaillant-groupe-etude_23-2149281149.jpg" alt="Groupes de travail">
+          <div class="overlay"><div style="font-size:16px">Groupes & Partage</div><div class="small">Échange et progrès collaboratif</div></div>
+        </div>
+      </div>
+      <div class="carousel-controls" id="dots">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABS + DASHBOARD -->
+  <div class="tabs" role="tablist" aria-label="Sections">
+    <div class="tab active" data-section="dashboard">Tableau de bord</div>
+    <div class="tab" data-section="features">Fonctionnalités</div>
+    <div class="tab" data-section="privacy">Confidentialité</div>
+    <div class="tab" data-section="programs">Programmes</div>
+    <div class="tab" data-section="help">Aide</div>
+  </div>
+
+  <section id="dashboard" class="card-module">
+    <div class="module-header">
+      <div>
+        <h2 style="margin:0;color:#eaf9f0">Tableau de bord</h2>
+        <div class="small" style="margin-top:4px;color:var(--muted)">Accède rapidement à tes outils — clique sur une carte pour ouvrir la fenêtre correspondante.</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="small" style="color:var(--muted)">Connecté: <span id="user-display" style="color:#bff4d7">Invité</span></div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="feature-card" data-open="agenda" title="Agenda intelligent">
+        <h3>Agenda intelligent</h3>
+        <p>Colle tes notes, ajoute ton emploi du temps, l'IA simulée extrait résumé et planifie les sessions sur les jours disponibles.</p>
+      </div>
+
+      <div class="feature-card" data-open="focus" title="Mode Focus">
+        <h3>Mode Focus</h3>
+        <p>Active un minuteur Pomodoro, suivi automatique et historique des sessions.</p>
+      </div>
+
+      <div class="feature-card" data-open="groups" title="Groupes de travail">
+        <h3>Groupes de travail</h3>
+        <p>Recherche de groupes, chat collaboratif et partage sécurisé de fiches (fichiers texte).</p>
+      </div>
+
+      <div class="feature-card" data-open="progress" title="Tableau de progression">
+        <h3>Tableau de progression</h3>
+        <p>Suivi du temps total, export possible CSV, conseils personnalisés selon l'activité.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features content (hidden) -->
+  <section id="features" class="card-module" style="display:none">
+    <h2 style="margin-top:0;color:#eaf9f0">Fonctionnalités</h2>
+    <p class="small" style="color:var(--muted)">Voici les fonctionnalités principales de StudyUp :</p>
+    <ul style="color:var(--muted);line-height:1.7">
+      <li><strong>Prise de notes intelligente</strong> — résumé automatique, points clés, et suggestions de sessions.</li>
+      <li><strong>Planification</strong> — découpe intelligente des chapitres en sessions de révision planifiées selon ton emploi du temps hebdomadaire.</li>
+      <li><strong>Mode Focus</strong> — minuterie Pomodoro, checklist anti-distraction et journalisation.</li>
+      <li><strong>Groupes & Partage</strong> — chat, upload/partage de fiches (txt), création et gestion de groupes locaux.</li>
+      <li><strong>Progression</strong> — suivi du temps, historique des sessions et export CSV pour garder une trace.</li>
+      <li><strong>Import/Export</strong> — télécharge tes fiches partagées ou sauvegarde un export de ton historique.</li>
+    </ul>
+  </section>
+
+  <section id="privacy" class="card-module" style="display:none">
+    <h2 style="margin-top:0;color:#eaf9f0">Confidentialité</h2>
+    <p class="small" style="color:var(--muted)">Étendue de confidentialité (prototype local) :</p>
+    <ol style="color:var(--muted);line-height:1.7">
+      <li>Les données sont stockées localement dans cette version — aucune donnée n'est envoyée sur des serveurs externes (sauf si tu choisis d'exporter).</li>
+      <li>En production, StudyUp chiffrerait les données sensibles et respecterait le RGPD : droit à l'oubli, export des données, suppression complète sur demande.</li>
+      <li>Les fichiers uploadés sont limités à des formats texte (.txt, .md). Les fichiers binaires sont ignorés pour la sécurité.</li>
+    </ol>
+  </section>
+
+  <section id="programs" class="card-module" style="display:none">
+    <h2 style="margin-top:0;color:#eaf9f0">Programmes</h2>
+    <p class="small" style="color:var(--muted)">Programmes supportés (exemples) :</p>
+    <ul style="color:var(--muted);line-height:1.7">
+      <li>Secondaire : Maths, Physique, Chimie, Histoire</li>
+      <li>Licence : Informatique, Mathématiques, Sciences</li>
+      <li>Grandes écoles : Prépa et modules spécialisés</li>
+    </ul>
+  </section>
+
+  <!-- AIDE: step-by-step modes d'emploi -->
+  <section id="help" class="card-module" style="display:none">
+    <h2 style="margin-top:0;color:#eaf9f0">Aide & Modes d'emploi</h2>
+
+    <div class="help-step">
+      <h4>Agenda intelligent — Mode d'emploi (étape par étape)</h4>
+      <ol>
+        <li>Ouvre <em>Agenda</em> (bouton ou carte).</li>
+        <li>Ajouter ton titre de cours et coller le contenu ou télécharger un fichier texte (.txt / .md).</li>
+        <li>Indique ton <strong>emploi du temps hebdomadaire</strong> (disponibilités par jour) — la fenêtre d'agenda propose un mini-formulaire pour cela.</li>
+        <li>Clique <strong>Analyser</strong> : le prototype génère un résumé, points-clés et estime le temps nécessaire.</li>
+        <li>Clique <strong>Planifier</strong> pour répartir les minutes estimées sur les créneaux disponibles (le système crée des sessions datées).</li>
+        <li>Tu peux exporter le planning ou l'ajouter manuellement à ton calendrier externe si besoin.</li>
+      </ol>
+    </div>
+
+    <div class="help-step">
+      <h4>Mode Focus — Mode d'emploi</h4>
+      <ol>
+        <li>Ouvre <em>Mode Focus</em>.</li>
+        <li>Entre ton email (permet d'identifier les sessions localement).</li>
+        <li>Choisis la durée (par défaut 25 minutes) et clique <strong>Démarrer</strong>.</li>
+        <li>Le minuteur tourne ; à la fin il enregistre la session dans l'historique.</li>
+        <li>Tu peux <strong>Terminer</strong> la session manuellement ; toutes les sessions sont stockées localement.</li>
+      </ol>
+    </div>
+
+    <div class="help-step">
+      <h4>Groupes & partage — Mode d'emploi</h4>
+      <ol>
+        <li>Ouvre <em>Groupes</em> et recherche par matière.</li>
+        <li>Tu peux créer ou rejoindre un groupe localement ; chaque groupe contient une liste de membres et ressources.</li>
+        <li>Dans le panneau de partage, upload un fichier texte (.txt). Il sera disponible dans la liste de fichiers partagés du groupe.</li>
+        <li>Utilise le <strong>Tchat</strong> pour discuter : chaque message peut attacher un fichier déjà uploadé.</li>
+        <li>Les autres participants (sur le même navigateur ou poste) verront les messages/ressources via le stockage local simulé.</li>
+      </ol>
+    </div>
+
+    <div class="help-step">
+      <h4>Progression & Export — Mode d'emploi</h4>
+      <ol>
+        <li>Ouvre <em>Progression</em> pour voir le total de minutes.</li>
+        <li>Tu peux exporter l'historique (bouton <strong>Exporter CSV</strong> s'il apparaît) pour garder trace.</li>
+        <li>Conseil : vise 8 sessions de 25 minutes par semaine pour de bons résultats.</li>
+      </ol>
+    </div>
+
+    <div class="help-step">
+      <h4>Partage de fiches & sécurité</h4>
+      <ol>
+        <li>Ne partage que des notes dont tu as le droit de diffusion.</li>
+        <li>Ce prototype stocke tout localement ; pour partager avec un ami, exporte le fichier et envoie-le par ton canal habituel.</li>
+        <li>À terme, on implementera chiffrement & serveur sécurisé pour échanges réels.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Hidden modals for functionality -->
+
+  <!-- AGENDA MODAL -->
+  <div class="modal" id="modal-agenda" role="dialog" aria-modal="true">
+    <div class="m-head" id="mhead-agenda"><div class="m-title">Agenda intelligent</div><button class="m-close" data-close="modal-agenda">Fermer ✕</button></div>
+    <div class="m-body">
+      <p class="small">Colle ton cours ou upload un fichier texte. Clique <strong>Analyser</strong> pour générer un résumé (IA simulée), puis <strong>Planifier</strong> pour répartir les sessions selon ton emploi du temps.</p>
+
+      <label class="small">Titre du cours<input class="input" id="agenda-title" placeholder="Titre du cours (ex: Analyse 1)"></label>
+      <label class="small" style="margin-top:8px">Upload fichier texte (optionnel)
+        <input id="agenda-file" type="file" accept=".txt,.md" class="input" style="padding:6px;">
+      </label>
+      <textarea id="agenda-text" rows="6" class="input" placeholder="Colle ici le contenu du cours..."></textarea>
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="btn-analyze">Analyser</button>
+        <button class="btn secondary" id="btn-planify">Planifier</button>
+        <button class="btn secondary" id="btn-create-group">Créer un groupe</button>
+      </div>
+
+      <div style="margin-top:12px;">
+        <strong class="small">Emploi du temps (disponibilités hebdo)</strong>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <label class="pill">Lun: <input id="avail-mon" type="number" min="0" max="600" value="60" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Mar: <input id="avail-tue" type="number" min="0" max="600" value="60" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Mer: <input id="avail-wed" type="number" min="0" max="600" value="60" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Jeu: <input id="avail-thu" type="number" min="0" max="600" value="60" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Ven: <input id="avail-fri" type="number" min="0" max="600" value="60" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Sam: <input id="avail-sat" type="number" min="0" max="600" value="120" style="width:70px;margin-left:6px"></label>
+          <label class="pill">Dim: <input id="avail-sun" type="number" min="0" max="600" value="120" style="width:70px;margin-left:6px"></label>
+        </div>
+      </div>
+
+      <div id="agenda-result" style="margin-top:12px;color:var(--muted)"></div>
+      <div id="agenda-plan" style="margin-top:12px;color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <!-- FOCUS MODAL -->
+  <div class="modal" id="modal-focus">
+    <div class="m-head" id="mhead-focus"><div class="m-title">Mode Focus</div><button class="m-close" data-close="modal-focus">Fermer ✕</button></div>
+    <div class="m-body">
+      <p class="small">Active une session Focus. La session sera suivie localement. Utilise Pomodoro 25/5 par défaut.</p>
+      <label class="small">Email de session<input class="input" id="focus-email" placeholder="ton.email@example.com"></label>
+      <label class="small">Durée (minutes)<input class="input" id="focus-duration" type="number" min="5" value="25"></label>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="btn-start-focus">Démarrer</button>
+        <button class="btn secondary" id="btn-stop-focus">Terminer</button>
+      </div>
+      <div id="focus-timer" style="margin-top:12px;font-weight:800;font-size:18px;color:#bff4d7">00:00</div>
+      <div id="focus-history" style="margin-top:12px;color:var(--muted)" class="small"></div>
+    </div>
+  </div>
+
+  <!-- GROUPS MODAL (includes file sharing + chat) -->
+  <div class="modal" id="modal-groups">
+    <div class="m-head" id="mhead-groups"><div class="m-title">Groupes & Partage</div><button class="m-close" data-close="modal-groups">Fermer ✕</button></div>
+    <div class="m-body">
+      <p class="small">Recherche un cours pour trouver (ou créer) un groupe. Partage des fiches (.txt) et discute via le chat local.</p>
+
+      <input class="input" id="group-query" placeholder="Ex: Analyse 1, Programmation">
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="btn-search-group">Rechercher</button>
+        <button class="btn secondary" id="btn-refresh-groups">Afficher tous</button>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="flex:1">
+          <div class="small" style="margin-bottom:6px">Groupes</div>
+          <div id="group-results" class="file-list"></div>
+        </div>
+
+        <div style="flex:1">
+          <div class="small" style="margin-bottom:6px">Partage de fichiers (fiches .txt)</div>
+          <div class="share-area">
+            <input id="share-file" type="file" accept=".txt,.md" class="input">
+            <button class="btn" id="btn-upload-share">Uploader et partager</button>
+            <div id="shared-files" class="file-list"></div>
+            <div style="margin-top:8px"><strong class="small">Tchat du groupe</strong></div>
+            <div id="chat" class="chat-box" aria-live="polite"></div>
+            <div class="chat-input">
+              <input id="chat-text" class="input" placeholder="Écris un message...">
+              <button class="btn secondary" id="btn-send-chat">Envoyer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROGRESS MODAL -->
+  <div class="modal" id="modal-progress">
+    <div class="m-head" id="mhead-progress"><div class="m-title">Tableau de progression</div><button class="m-close" data-close="modal-progress">Fermer ✕</button></div>
+    <div class="m-body">
+      <p class="small">Affiche ton total d'heures d'étude sauvegardées localement et les sessions Focus enregistrées.</p>
+      <div id="progress-summary" style="margin-top:8px;color:var(--muted)"></div>
+      <div style="margin-top:12px;color:var(--muted)" class="small">Conseils : vise au moins 8 sessions de 25 minutes par semaine pour une bonne progression.</div>
+      <div style="margin-top:12px">
+        <button class="btn" id="btn-export-csv">Exporter CSV</button>
+        <button class="btn secondary" id="btn-clear-sessions">Supprimer historique</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECOND CAROUSE / MARQUEE -->
+  <div class="marquee-wrap card-module">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-weight:800;color:#eaf9f0">Inspiration & Astuces (Diaporama Hors-Norme)</div>
+      <div class="small" style="color:var(--muted)">Glisse automatique — arrête au survol</div>
+    </div>
+    <div class="marquee" id="marquee">
+      <!-- duplicating items to loop visually -->
+      <div style="display:flex;gap:18px">
+        <div class="marquee-card"><img src="https://tse4.mm.bing.net/th/id/OIP.9jt-5o9aDrHU7n7pX9Eu_wHaFj?pid=ImgDet&w=474&h=355&rs=1&o=7&rm=3"><div class="meta">Plan de révision rapide</div></div>
+        <div class="marquee-card"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=fa0a14a3a0f9a"><div class="meta">Fiches synthétiques</div></div>
+        <div class="marquee-card"><img src="https://img.freepik.com/photos-premium/etudiant-noir-portrait-classe-pour-etude-education-heureux-au-college-sourire-classe-apprenants-africains-generation-z-bureau-universite-pour-objectifs-apprentissage-motivation-pour-avenir_590464-123593.jpg"><div class="meta">Techniques D'étude simplifié</div></div>
+        <div class="marquee-card"><img src="https://tse4.mm.bing.net/th/id/OIP.LqK0A1CigssEhgPwTd8pawHaFj?pid=ImgDet&w=474&h=355&rs=1&o=7&rm=3"><div class="meta">Travail en binôme</div></div>
+        <!-- repeat to allow smooth loop -->
+        <div class="marquee-card"><img src="https://tse3.mm.bing.net/th/id/OIP.KBT0aGmLyEWiVwsf6qSSkAHaEm?rs=1&pid=ImgDetMain&o=7&rm=3"><div class="meta">Plan de révision rapide</div></div>
+        <div class="marquee-card"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=fa0a14a3a0f9a"><div class="meta">Fiches synthétiques</div></div>
+      </div>
+    </div>
+  </div>
+
+ </main>
+
+ <!-- FOOTER -->
+ <footer class="site-footer">
+   <div class="footer-grid">
+     <div class="footer-col">
+       <center><h4>Notre mission</h4></center>
+       <center><p>Permettre aux étudiants de se concentrer sur l'essentiel, organiser l'apprentissage, et créer une communauté d'entraide efficace.</p></center>
+     </div>
+     <div class="footer-col">
+       <center><h4>Qui sommes-nous</h4></center>
+       <center><p>StudyUp est une plateforme conçue par des étudiants passionnés par la pédagogie moderne et l'efficacité cognitive.</p></center>
+     </div>
+     <div class="footer-col">
+       <center><h4>Comment utiliser StudyUp</h4></center>
+       <center><p><strong>1.</strong> Crée ton compte (prototype local : choisis un email).<br>
+          <strong>2.</strong> Va dans <em>Agenda</em>,Pour organiser <em>tes temps</em> d'etude.<br>
+          <strong>3.</strong> Lance le <em>Mode Focus</em> avant une session; le système enregistrera la durée.<br>
+          <strong>4.</strong> Dans <em>Groupes</em>, recherche ta matière et rejoins un groupe; discute et partage des fiches.<br>
+          <strong>5.</strong> Consulte <em>Progression</em> pour voir ton temps total et historique.</p></center>
+     </div>
+
+
+ <!-- SCRIPT: behavior, 3D carousel, modals, simulated IA, drag, persistence -->
+ <script>
+ /* ---------- Utilities ---------- */
+ const qs = s => document.querySelector(s);
+ const qsa = s => Array.from(document.querySelectorAll(s));
+ const byId = id => document.getElementById(id);
+
+ function showModal(id){ const m = byId(id); if(m){m.classList.add('show'); centerModal(m); } }
+ function hideModal(id){ const m = byId(id); if(m){m.classList.remove('show'); } }
+ function centerModal(m){ m.style.left='50%'; m.style.top='50%'; m.style.transform='translate(-50%,-50%)'; }
+
+ /* ---------- Tabs top / bottom ---------- */
+ qsa('.tab').forEach(t=>{
+   t.addEventListener('click', ()=> {
+     qsa('.tab').forEach(x=>x.classList.remove('active'));
+     t.classList.add('active');
+     const sec = t.dataset.section;
+     ['dashboard','features','privacy','programs','help'].forEach(id=>{
+       const el = byId(id);
+       if(el) el.style.display = (id===sec? 'block' : 'none');
+     });
+     window.scrollTo({top:120,behavior:'smooth'});
+   });
+ });
+
+ // top nav mapping
+ qsa('.nav-link').forEach(n=>{
+   n.addEventListener('click', ()=>{
+     const map = {features:'features', privacy:'privacy', programs:'programs', help:'help'};
+     const s = n.dataset.tab;
+     const tabElement = qsa('.tab').find(x=> x.dataset.section === map[s]);
+     if(tabElement) tabElement.click();
+   });
+ });
+
+ /* ---------- Carousel behavior ---------- */
+ let carouselIndex = 0;
+ const carousel = byId('carousel');
+ const dots = qsa('.dot');
+ function setCarousel(i){
+   carouselIndex = (i+3)%3;
+   const angle = carouselIndex* -120;
+   carousel.style.transform = `rotateY(${angle}deg)`;
+   dots.forEach(d=>d.classList.remove('active'));
+   dots[carouselIndex].classList.add('active');
+ }
+ dots.forEach(d=>d.addEventListener('click', ()=> setCarousel(parseInt(d.dataset.index))));
+ let carouselTimer = setInterval(()=> setCarousel(carouselIndex+1), 4500);
+
+ /* ---------- Second marquee hover stop ---------- */
+ const marquee = byId('marquee');
+ marquee.addEventListener('mouseenter', ()=> marquee.style.animationPlayState='paused');
+ marquee.addEventListener('mouseleave', ()=> marquee.style.animationPlayState='running');
+
+ /* ---------- Feature cards open modals ---------- */
+ qsa('[data-open]').forEach(card=>{
+   card.addEventListener('click', ()=> {
+     const key = card.dataset.open;
+     if(key === 'agenda') showModal('modal-agenda');
+     if(key === 'focus') showModal('modal-focus');
+     if(key === 'groups') showModal('modal-groups');
+     if(key === 'progress') showModal('modal-progress');
+   });
+ });
+ byId('open-agenda').addEventListener('click', ()=> showModal('modal-agenda'));
+ byId('open-groups').addEventListener('click', ()=> showModal('modal-groups'));
+
+ /* ---------- Close buttons ---------- */
+ qsa('.m-close').forEach(btn=>{
+   btn.addEventListener('click', ()=> {
+     const id = btn.dataset.close;
+     if(id) hideModal(id);
+     else {
+       let el = btn;
+       while(el && !el.classList.contains('modal')) el = el.parentElement;
+       if(el) el.classList.remove('show');
+     }
+   });
+ });
+
+ /* ---------- Make modals draggable by header ---------- */
+ qsa('.modal').forEach(mod=>{
+   const head = mod.querySelector('.m-head');
+   if(!head) return;
+   head.addEventListener('mousedown', startDrag);
+   function startDrag(e){
+     e.preventDefault();
+     let rect = mod.getBoundingClientRect();
+     const startX = e.clientX, startY = e.clientY;
+     const origLeft = rect.left, origTop = rect.top;
+     document.body.style.userSelect = 'none';
+     function onMove(ev){
+       const dx = ev.clientX - startX, dy = ev.clientY - startY;
+       mod.style.left = (origLeft + dx) + 'px';
+       mod.style.top = (origTop + dy) + 'px';
+       mod.style.transform = 'translate(0,0)';
+     }
+     function onUp(){
+       document.removeEventListener('mousemove', onMove);
+       document.removeEventListener('mouseup', onUp);
+       document.body.style.userSelect = '';
+     }
+     document.addEventListener('mousemove', onMove);
+     document.addEventListener('mouseup', onUp);
+   }
+ });
+
+ /* ---------- Agenda: simulated AI summarizer + scheduling ---------- */
+ function summarizeText(text){
+   if(!text || !text.trim()) return {summary:'Aucun contenu fourni.',bullets:['Aucun point extrait.'],minutes:20};
+   const sentences = text.replace(/[\r\n]+/g,' ').split(/(?<=[.!?])\s+/);
+   const summary = sentences.slice(0,3).join(' ').slice(0,600);
+   const words = text.split(/\s+/).filter(w=>w.length>3);
+   const bullets = [];
+   const chunks = Math.max(1, Math.ceil(words.length/6));
+   for(let i=0;i<5;i++){
+     const chunk = words.slice(i*chunks, i*chunks+Math.min(8,words.length));
+     if(chunk.length) bullets.push(chunk.join(' ').slice(0,120));
+   }
+   const minutes = Math.max(15, Math.min(480, Math.floor(words.length/10)));
+   return {summary, bullets:bullets.slice(0,5),minutes};
+ }
+
+ byId('agenda-file').addEventListener('change', (e)=>{
+   const f = e.target.files[0];
+   if(!f) return;
+   const reader = new FileReader();
+   reader.onload = ()=> {
+     byId('agenda-text').value = reader.result;
+   };
+   reader.readAsText(f);
+ });
+
+ byId('btn-analyze').addEventListener('click', ()=>{
+   const title = byId('agenda-title').value || 'Cours';
+   const text = byId('agenda-text').value;
+   const res = summarizeText(text || title);
+   const html = `<div style="color:#cfeee0"><strong>Résumé :</strong> ${escapeHtml(res.summary)}</div>
+                 <ul style="color:var(--muted);margin-top:8px">${res.bullets.map(b=>`<li>${escapeHtml(b)}</li>`).join('')}</ul>
+                 <div class="small" style="margin-top:8px;color:var(--muted)">Durée estimée de révision : <strong style="color:#bff4d7">${res.minutes} min</strong></div>`;
+   byId('agenda-result').innerHTML = html;
+   // persist
+   const saved = JSON.parse(localStorage.getItem('studyup_courses')||'[]');
+   saved.unshift({id:Date.now(),title:title,summary:res.summary,bullets:res.bullets,minutes:res.minutes,raw:text});
+   localStorage.setItem('studyup_courses', JSON.stringify(saved));
+   renderSharedFiles(); renderGroupsList();
+ });
+
+ // Planifier: répartit minutes estimées selon disponibilités hebdo et crée sessions datées
+ byId('btn-planify').addEventListener('click', ()=>{
+   const title = byId('agenda-title').value || 'Cours';
+   const courses = JSON.parse(localStorage.getItem('studyup_courses')||'[]');
+   const course = courses.find(c=>c.title===title) || courses[0];
+   if(!course){ alert('Analyse le cours d\'abord (Analyser)'); return; }
+   // collect availability per day (minutes)
+   const week = [
+     {key:'mon',label:'Lundi',min: parseInt(byId('avail-mon').value||0,10)},
+     {key:'tue',label:'Mardi',min: parseInt(byId('avail-tue').value||0,10)},
+     {key:'wed',label:'Mercredi',min: parseInt(byId('avail-wed').value||0,10)},
+     {key:'thu',label:'Jeudi',min: parseInt(byId('avail-thu').value||0,10)},
+     {key:'fri',label:'Vendredi',min: parseInt(byId('avail-fri').value||0,10)},
+     {key:'sat',label:'Samedi',min: parseInt(byId('avail-sat').value||0,10)},
+     {key:'sun',label:'Dimanche',min: parseInt(byId('avail-sun').value||0,10)}
+   ];
+   const totalNeeded = course.minutes;
+   // allocate across week in order, create sessions with dates
+   // determine next 14 days and allocate where availability > 0
+   const sessions = [];
+   let remaining = totalNeeded;
+   const today = new Date();
+   for(let d=0; d<14 && remaining>0; d++){
+     const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + d);
+     const weekday = date.getDay(); // 0 Sun,1 Mon...
+     const widx = weekday===0?6:weekday-1;
+     const avail = week[widx].min;
+     if(avail<=0) continue;
+     const allocate = Math.min( Math.ceil(totalNeeded/7), avail, remaining );
+     // create session object
+     sessions.push({id:Date.now()+d, course:course.title, date: date.toISOString(), minutes: allocate});
+     remaining -= allocate;
+   }
+   // save planned sessions
+   const savedPlans = JSON.parse(localStorage.getItem('studyup_plans')||'[]');
+   savedPlans.unshift({id:Date.now(),course:course.title,planned:sessions,created:new Date().toISOString()});
+   localStorage.setItem('studyup_plans', JSON.stringify(savedPlans));
+   // render
+   if(sessions.length===0){
+     byId('agenda-plan').innerHTML = `<div class="small" style="color:var(--muted)">Aucun créneau disponible sur les 14 prochains jours. Ajuste ton emploi du temps.</div>`;
+   } else {
+     byId('agenda-plan').innerHTML = `<div style="color:#bff4d7;font-weight:800">Planification créée — ${sessions.length} sessions</div>
+       <div class="small" style="color:var(--muted);margin-top:8px">${sessions.map(s=>`${new Date(s.date).toLocaleDateString()} • ${s.minutes} min`).join('<br>')}</div>`;
+   }
+   renderProgressSummary();
+ });
+
+ /* ---------- Create group (simple) ---------- */
+ byId('btn-create-group').addEventListener('click', ()=>{
+   const title = byId('agenda-title').value || 'Cours';
+   const savedG = JSON.parse(localStorage.getItem('studyup_groups')||'[]');
+   const newG = {id:Date.now(),course:title,title:`Groupe ${title}`,members:[],resources:[]};
+   savedG.unshift(newG);
+   localStorage.setItem('studyup_groups', JSON.stringify(savedG));
+   alert('Groupe créé localement : ' + newG.title);
+   renderGroupsList();
+ });
+
+ /* ---------- Groups search & join ---------- */
+ byId('btn-search-group').addEventListener('click', ()=>{
+   searchGroups();
+ });
+ byId('btn-refresh-groups').addEventListener('click', ()=> renderGroupsList());
+
+ function searchGroups(){
+   const q = (byId('group-query').value||'').trim().toLowerCase();
+   const all = JSON.parse(localStorage.getItem('studyup_groups')||'[]');
+   const courses = JSON.parse(localStorage.getItem('studyup_courses')||'[]');
+   let results = all.filter(g => g.title.toLowerCase().includes(q) || (g.course && g.course.toLowerCase().includes(q)));
+   const courseMatches = courses.filter(c => c.title.toLowerCase().includes(q) || (c.summary && c.summary.toLowerCase().includes(q)));
+   const out = [];
+   results.forEach(r=> out.push({type:'group',item:r}));
+   courseMatches.forEach(c=> out.push({type:'course',item:c}));
+   const html = out.length ? out.map(o=>{
+     if(o.type==='group') return `<div style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px">
+       <strong style="color:#dfffe8">${escapeHtml(o.item.title)}</strong><div class="small" style="color:var(--muted)">Membres: ${o.item.members?o.item.members.length:0}</div>
+       <div style="margin-top:6px"><button class="btn small-join" data-id="${o.item.id}">Rejoindre</button></div></div>`;
+     else return `<div style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px">
+       <strong style="color:#dfffe8">${escapeHtml(o.item.title)}</strong><div class="small" style="color:var(--muted)">Résumé: ${escapeHtml((o.item.summary||'').slice(0,80))}...</div>
+       <div style="margin-top:6px"><button class="btn small-join" data-course="${o.item.id}">Créer/Rejoindre groupe</button></div></div>`;
+   }).join('') : `<div class="small" style="color:var(--muted)">Aucun groupe trouvé.</div>`;
+   byId('group-results').innerHTML = html;
+   attachGroupButtons();
+ }
+
+ function renderGroupsList(){
+   const all = JSON.parse(localStorage.getItem('studyup_groups')||'[]');
+   const html = all.length ? all.map(g=>`<div style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px">
+       <strong style="color:#dfffe8">${escapeHtml(g.title)}</strong><div class="small" style="color:var(--muted)">Membres: ${g.members?g.members.length:0}</div>
+       <div style="margin-top:6px"><button class="btn small-join" data-id="${g.id}">Rejoindre</button></div></div>`).join('') : `<div class="small" style="color:var(--muted)">Aucun groupe.</div>`;
+   byId('group-results').innerHTML = html;
+   attachGroupButtons();
+ }
+
+ function attachGroupButtons(){
+   qsa('.small-join').forEach(b=>{
+     b.addEventListener('click', ()=>{
+       if(b.dataset.id){
+         const gid = b.dataset.id;
+         const saved = JSON.parse(localStorage.getItem('studyup_groups')||'[]');
+         const g = saved.find(x=> String(x.id)===String(gid));
+         const email = prompt('Entre ton email pour rejoindre le groupe (local):','etu@exemple.com');
+         if(email){
+           g.members = g.members || [];
+           if(!g.members.includes(email)) g.members.push(email);
+           localStorage.setItem('studyup_groups', JSON.stringify(saved));
+           alert('Tu as rejoint le groupe');
+           renderGroupsList();
+         }
+       } else if(b.dataset.course){
+         const cid = b.dataset.course;
+         const courses = JSON.parse(localStorage.getItem('studyup_courses')||'[]');
+         const c = courses.find(x=> String(x.id)===String(cid));
+         const saved = JSON.parse(localStorage.getItem('studyup_groups')||'[]');
+         const newG = {id:Date.now(), course:c.title, title:`Groupe ${c.title}`, members:[], resources:[c.id]};
+         saved.unshift(newG);
+         localStorage.setItem('studyup_groups', JSON.stringify(saved));
+         alert('Groupe créé: ' + newG.title);
+         renderGroupsList();
+       }
+     });
+   });
+ }
+
+ /* ---------- File sharing: upload and list ---------- */
+ byId('btn-upload-share').addEventListener('click', ()=>{
+   const finput = byId('share-file');
+   const f = finput.files[0];
+   if(!f){ alert('Choisis un fichier texte (.txt)'); return; }
+   if(!/\.(txt|md)$/i.test(f.name)){ alert('Format non autorisé. Seuls .txt/.md'); return; }
+   const reader = new FileReader();
+   reader.onload = ()=>{
+     const files = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+     const item = {id:Date.now(),name:f.name,content:reader.result,uploaded:new Date().toISOString()};
+     files.unshift(item);
+     localStorage.setItem('studyup_shared_files', JSON.stringify(files));
+     renderSharedFiles();
+     alert('Fichier partagé localement.');
+     finput.value = '';
+   };
+   reader.readAsText(f);
+ });
+
+ function renderSharedFiles(){
+   const files = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+   const html = files.length ? files.map(f=>`<div style="padding:6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+     <div style="display:flex;justify-content:space-between;align-items:center">
+       <div><strong style="color:#dfffe8">${escapeHtml(f.name)}</strong><div class="small" style="color:var(--muted)">${new Date(f.uploaded).toLocaleString()}</div></div>
+       <div style="display:flex;gap:6px">
+         <button class="btn small-download" data-id="${f.id}">Télécharger</button>
+         <button class="btn secondary small-insert" data-id="${f.id}">Insérer dans chat</button>
+       </div>
+     </div>
+   </div>`).join('') : `<div class="small" style="color:var(--muted)">Aucun fichier partagé.</div>`;
+   byId('shared-files').innerHTML = html;
+   attachFileButtons();
+ }
+
+ function attachFileButtons(){
+   qsa('.small-download').forEach(b=>{
+     b.addEventListener('click', ()=>{
+       const id = b.dataset.id;
+       const files = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+       const f = files.find(x=> String(x.id)===String(id));
+       if(!f) return;
+       const blob = new Blob([f.content], {type:'text/plain'});
+       const url = URL.createObjectURL(blob);
+       const a = document.createElement('a');
+       a.href = url; a.download = f.name; document.body.appendChild(a); a.click();
+       a.remove(); URL.revokeObjectURL(url);
+     });
+   });
+   qsa('.small-insert').forEach(b=>{
+     b.addEventListener('click', ()=>{
+       const id = b.dataset.id;
+       const files = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+       const f = files.find(x=> String(x.id)===String(id));
+       if(!f) return;
+       // insert short link in chat (simulated)
+       const filesShort = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+       const msg = {id:Date.now(),from:'Moi',text:`[FICHE] ${f.name}`,fileId:f.id,ts:new Date().toISOString()};
+       const chat = JSON.parse(localStorage.getItem('studyup_chat')||'[]');
+       chat.push(msg); localStorage.setItem('studyup_chat', JSON.stringify(chat));
+       renderChat();
+     });
+   });
+ }
+
+ /* ---------- Chat ---------- */
+ byId('btn-send-chat').addEventListener('click', sendChat);
+ byId('chat-text').addEventListener('keydown', (e)=> { if(e.key==='Enter') sendChat(); });
+ function sendChat(){
+   const text = byId('chat-text').value.trim();
+   if(!text) return;
+   const chat = JSON.parse(localStorage.getItem('studyup_chat')||'[]');
+   chat.push({id:Date.now(),from:'Moi',text,ts:new Date().toISOString()});
+   localStorage.setItem('studyup_chat', JSON.stringify(chat));
+   byId('chat-text').value='';
+   renderChat();
+ }
+ function renderChat(){
+   const chat = JSON.parse(localStorage.getItem('studyup_chat')||'[]');
+   const files = JSON.parse(localStorage.getItem('studyup_shared_files')||'[]');
+   const html = chat.length ? chat.map(m=>{
+     const file = m.fileId? files.find(f=> String(f.id)===String(m.fileId)) : null;
+     return `<div style="padding:6px;border-bottom:1px solid rgba(255,255,255,0.02)">
+       <div style="font-weight:700;color:#dfffe8">${escapeHtml(m.from)} <span class="small" style="color:var(--muted);font-weight:600">• ${new Date(m.ts).toLocaleTimeString()}</span></div>
+       <div style="margin-top:6px;color:var(--muted)">${escapeHtml(m.text)} ${file?`<div style="margin-top:6px"><button class="btn small-download" data-id="${file.id}">Télécharger ${escapeHtml(file.name)}</button></div>`:''}</div>
+     </div>`;
+   }).join('') : `<div class="small" style="color:var(--muted)">Aucun message pour l'instant.</div>`;
+   byId('chat').innerHTML = html;
+   attachFileButtons(); // ensures download buttons in chat work
+   byId('chat').scrollTop = byId('chat').scrollHeight;
+ }
+
+ /* ---------- Progress: track sessions and display ---------- */
+ let focusInterval = null; let focusRemaining = 0; let focusSession = null;
+
+ byId('btn-start-focus').addEventListener('click', ()=>{
+   const email = byId('focus-email').value.trim();
+   const duration = parseInt(byId('focus-duration').value,10) || 25;
+   if(!email){ alert('Entre un email'); return; }
+   const id = Date.now();
+   focusSession = {id, email, mode:'focus', start:new Date().toISOString(), end:null, duration_minutes:0};
+   focusRemaining = duration*60;
+   localStorage.setItem('studyup_active_session', JSON.stringify(focusSession));
+   renderFocus();
+   focusInterval = setInterval(()=> {
+     focusRemaining--;
+     renderFocus();
+     if(focusRemaining<=0){
+       endFocus();
+       alert('Session terminée !');
+     }
+   },1000);
+   const sess = JSON.parse(localStorage.getItem('studyup_sessions')||'[]');
+   sess.unshift(focusSession);
+   localStorage.setItem('studyup_sessions', JSON.stringify(sess));
+ });
+
+ byId('btn-stop-focus').addEventListener('click', ()=>{ endFocus(); });
+
+ function endFocus(){
+   clearInterval(focusInterval);
+   if(!focusSession) return;
+   focusSession.end = new Date().toISOString();
+   const durationMin = Math.max(1, Math.round(((new Date(focusSession.end)) - new Date(focusSession.start))/60000));
+   focusSession.duration_minutes = durationMin;
+   const sess = JSON.parse(localStorage.getItem('studyup_sessions')||'[]');
+   const idx = sess.findIndex(s=> s.id===focusSession.id);
+   if(idx>=0) sess[idx] = focusSession;
+   localStorage.setItem('studyup_sessions', JSON.stringify(sess));
+   localStorage.removeItem('studyup_active_session');
+   focusSession=null; focusRemaining=0;
+   renderFocus(); renderProgressSummary();
+ }
+
+ function renderFocus(){
+   if(focusRemaining>0){
+     const mm = String(Math.floor(focusRemaining/60)).padStart(2,'0');
+     const ss = String(focusRemaining%60).padStart(2,'0');
+     byId('focus-timer').textContent = `${mm}:${ss}`;
+     byId('focus-history').textContent = 'Session en cours pour ' + (focusSession?focusSession.email:'') ;
+   } else {
+     byId('focus-timer').textContent = '00:00';
+     const sessions = JSON.parse(localStorage.getItem('studyup_sessions')||'[]').slice(0,6);
+     byId('focus-history').innerHTML = sessions.length ? sessions.map(s=>`<div>${escapeHtml(s.email)} • ${s.duration_minutes||0} min • ${new Date(s.start).toLocaleString()}</div>`).join('') : 'Aucune session enregistrée.';
+   }
+ }
+
+ /* ---------- Render progress summary & export ---------- */
+ function renderProgressSummary(){
+   const sessions = JSON.parse(localStorage.getItem('studyup_sessions')||'[]');
+   const total = sessions.reduce((acc,s)=> acc + (s.duration_minutes||0), 0);
+   const byMode = sessions.reduce((acc,s)=> {acc[s.mode] = (acc[s.mode]||0) + (s.duration_minutes||0); return acc; }, {});
+   const html = `<div style="color:#bff4d7;font-weight:800">${total} minutes totales</div>
+                 <div class="small" style="color:var(--muted);margin-top:8px">Par mode: ${Object.entries(byMode).map(([k,v])=>`${k}:${v}min`).join(' • ')}</div>
+                 <div style="margin-top:12px;color:var(--muted)">${sessions.slice(0,8).map(s=>`<div>${escapeHtml(s.email)} • ${s.duration_minutes||0} min • ${new Date(s.start).toLocaleString()}</div>`).join('')}</div>`;
+   byId('progress-summary').innerHTML = html;
+ }
+
+ byId('btn-export-csv').addEventListener('click', ()=>{
+   const sessions = JSON.parse(localStorage.getItem('studyup_sessions')||'[]');
+   if(!sessions.length){ alert('Aucune session à exporter'); return; }
+   const csv = ['email,start,end,duration_minutes,mode'].concat(sessions.map(s=>`${s.email},${s.start||''},${s.end||''},${s.duration_minutes||0},${s.mode||''}`)).join('\n');
+   const blob = new Blob([csv],{type:'text/csv'});
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement('a'); a.href=url; a.download='studyup_sessions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+ });
+
+ byId('btn-clear-sessions').addEventListener('click', ()=>{
+   if(confirm('Supprimer tout l\'historique des sessions ?')){ localStorage.removeItem('studyup_sessions'); renderProgressSummary(); }
+ });
+
+ /* ---------- Render on load ---------- */
+ function init(){
+   const active = JSON.parse(localStorage.getItem('studyup_active_session')||'null');
+   if(active){
+     focusSession = active;
+     const elapsed = Math.floor((Date.now() - new Date(active.start))/1000);
+     // fallback duration read from stored value or default 25m
+     focusRemaining = Math.max(0, (parseInt(byId('focus-duration')?.value,10) || 25)*60 - elapsed);
+     if(focusRemaining>0){
+       focusInterval = setInterval(()=> { focusRemaining--; renderFocus(); if(focusRemaining<=0) endFocus(); },1000);
+     }
+   }
+   renderFocus(); renderProgressSummary();
+
+   if(!localStorage.getItem('studyup_groups')) {
+     localStorage.setItem('studyup_groups', JSON.stringify([
+       {id:1,course:'Analyse 1',title:'Groupe Analyse 1 (Promo 2025)',members:[],resources:[]}
+     ]));
+   }
+   if(!localStorage.getItem('studyup_courses')) localStorage.setItem('studyup_courses','[]');
+   if(!localStorage.getItem('studyup_shared_files')) localStorage.setItem('studyup_shared_files','[]');
+   if(!localStorage.getItem('studyup_chat')) localStorage.setItem('studyup_chat','[]');
+
+   // Make modal open/close by clicking outside (dismiss)
+   qsa('.modal').forEach(m=>{
+     m.addEventListener('click', (ev)=>{
+       if(ev.target === m) m.classList.remove('show');
+     });
+   });
+
+   // keyboard Esc for closing
+   document.addEventListener('keydown', (e)=> { if(e.key==='Escape') qsa('.modal.show').forEach(m=>m.classList.remove('show')); });
+
+   renderSharedFiles(); renderChat(); renderGroupsList();
+
+   // ensure only dashboard visible initially
+   qsa('.tab').forEach(x=> x.classList.remove('active'));
+   const dashTab = qsa('.tab').find(x=> x.dataset.section==='dashboard');
+   if(dashTab) dashTab.classList.add('active');
+   ['features','privacy','programs','help'].forEach(id=>{ const el = byId(id); if(el) el.style.display='none'; });
+   byId('dashboard').style.display='block';
+ }
+ init();
+
+ /* ---------- ESCAPE HTML UTILITY ---------- */
+ function escapeHtml(str){
+   return String(str||'').replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ }
+
+</script>
+</body>
+</html>
